@@ -1,0 +1,13 @@
+# Configuration files
+config.py
+__pycache__/
+
+# Generated files
+*.xlsx
+labels/
+*.pdf
+
+# IDE and OS files
+.vscode/
+.idea/
+*.DS_Store
