@@ -1,13 +1,25 @@
-# Configuration files
-config.py
+# Python
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+pip-cache/
 
-# Generated files
+# Secrets
+jules_bb_python/app_config.py
+secrets.txt
+
+# Logs
+jules_bb_python/logs/
+*.log
+*.json
 *.xlsx
-labels/
 *.pdf
 
-# IDE and OS files
+# IDE
 .vscode/
 .idea/
-*.DS_Store
+
+# OS
+.DS_Store
