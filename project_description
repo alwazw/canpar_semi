@@ -1,0 +1,29 @@
+
+this project aims at having a 
+1- csv export of bb orders "orders.csv" to get transformed into a canpar input create shipments format via
+2- " 0. BB_to_Canpar.py" script the generates "Canpar_Import_Orders.csv"
+3- "Canpar_Import_Orders.csv" is experiencing issues parsing text to data as yyyymmdd no matter how i modified its format
+4- as this is a poc i am willing to import this file manually into their canshipws tool and semi manually generate labels 
+--> alternatively as this keeps failing it might be a better option to skip this bandaid patch option and immediatly proceed to leverage the canpar api to create labels. attached are the manifest generated files as well the xml documentation i was able to find.
+5- api response is supposed to retrieve and save both: xml reply with data as well as pdf shipping labels.
+6- this test includes 16 orders awaiting shipment. therefore there should be 16 labels generated and saved in the same directory.
+
+API CREDS:
+###
+
+CANPAR_API_USER=wafic.alwazzan@visionvation.com
+CANPAR_API_PASSWORD=Ground291!
+CANPAR_SHIPPER_NUM=46000041
+
+
+#########################
+## API XML:
+#########################
+
+https://canship.canpar.com/canshipws/services/CanshipBusinessService?wsdl
+https://canship.canpar.com/canshipws/services/CanparAddonsService?wsdl
+https://canship.canpar.com/canshipws/services/CanparRatingService?wsdl
+
+#########################
+
+ 

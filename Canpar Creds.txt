@@ -1,0 +1,116 @@
+#########################
+Canpar Creds
+#########################
+
+VISIONVATION INC.
+133 ROCK FERN WAY
+NORTH YORK
+
+
+## Username:	wafic.alwazzan@visionvation.com
+## Password:	Ground291!
+## Customer:	46000041
+
+###
+API CREDS:
+###
+
+CANPAR_API_USER=wafic.alwazzan@visionvation.com
+CANPAR_API_PASSWORD=Ground291!
+CANPAR_SHIPPER_NUM=46000041
+
+
+#########################
+## API XML:
+#########################
+
+https://canship.canpar.com/canshipws/services/CanshipBusinessService?wsdl
+https://canship.canpar.com/canshipws/services/CanparAddonsService?wsdl
+https://canship.canpar.com/canshipws/services/CanparRatingService?wsdl
+
+#########################
+
+
+
+
+
+
+
+
+            "Contact Phone": 
+            "Email Address": 
+            "Service": "967",
+            "Weight": 1800,
+            "Length": 35, 
+            "Width": 25.5,
+            "Height": 5
+
+
+##  Canpar Import Template Fields
+ shipping_template = pd.DataFrame({
+            "Delivery Address ID": validated_df["Order number"],
+            "Delivery Address Attention": validated_df["Quantity"].astype(str).str.strip() + "x " + validated_df["Offer SKU"].fillna("").str.strip(),
+            "Delivery Address Name": validated_df["Shipping address first name"].str.strip() + " " + validated_df["Shipping address last name"].str.strip(),
+            "Delivery Address Line 1": validated_df["Shipping address street 1"].str.strip(), 
+            "Delivery Address Line 2": validated_df["Shipping address street 2"].fillna("").str.strip(),
+            "Delivery Address Line 3": validated_df["Shipping address additional information"].fillna("").str.strip(),
+            "Delivery Address City": validated_df["Shipping address city"].str.strip(),
+            "Delivery Address Province": validated_df["Shipping address state"].str.strip(), 
+            "Delivery Address Postal Code": validated_df["Shipping address zip"].str.strip(), 
+            "Delivery Address Country": "CA"
+
+            "Delivery Address Phone": validated_df["Shipping address phone"].fillna("").str.strip(),
+            "Delivery Address Phone Extension": 
+            "Delivery Address Residential": 
+            "Delivery Address Email": validated_df["Shipping address email"].fillna("").str.strip(),
+            "Send Email To Delivery Address": 
+            "No Signature Required": 
+            "Signature": Z            "Service Type": 
+
+            "Total Number Of Pieces": 
+            "Total Weight": 
+            "Shipper Num": 
+            "Collect Shipper Num": 
+            "Shipping Date": 
+            "Pickup Address ID": 
+            "Pickup Address Name": 
+            "Pickup Address Line 1": 
+            "Pickup Address Line 2": 
+            "Pickup Address Line 3": 
+            "Pickup Address City": 
+            "Pickup Address Province": 
+            "Pickup Address Postal Code": 
+            "Pickup Address Country": 
+            "Pickup Address Attention": 
+            "Pickup Address Phone": 
+            "Pickup Address Phone Extension": 
+            "Pickup Address Residential": 
+            "Pickup Address Email": 
+            "Send Email To Pickup Address": 
+            "Premium": 
+            "Chain Of Signature": 
+            "Dangerous Goods": 
+            "Instruction": 
+            "Description": 
+            "Handling": 
+            "Handling Type": 
+            "Weight Unit": 
+            "Dimension Unit": 
+            "Package Length": 
+            "Package Width": 
+            "Package Height": 
+            "Extra Care": 
+            "Total Declared Value": 
+            "Reference": validated_df["Order number"],
+            "Alternative Reference": 
+            "Cost Centre": 
+            "Store Num": 
+            "COD Type": 
+            "COD Amount 1": 
+            "Post Dated Cheque 1": 
+            "COD Amount 2": 
+            "Post Dated Cheque 2": 
+            "COD Amount 3": 
+            "Post Dated Cheque 3": 
+            "Box Id": 
+
