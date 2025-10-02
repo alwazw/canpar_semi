@@ -6,16 +6,13 @@ __pycache__/
 venv/
 pip-cache/
 
-# Secrets
-jules_bb_python/app_config.py
-secrets.txt
-
-# Logs
+# Logs & Output
 jules_bb_python/logs/
 *.log
 *.json
 *.xlsx
 *.pdf
+*.txt
 
 # IDE
 .vscode/
