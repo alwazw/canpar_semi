@@ -2,9 +2,9 @@ import os
 import pandas as pd
 import json
 from datetime import datetime
+import database
 
 # --- Configuration ---
-INPUT_FILE = "Canpar_Shipment_Summary.xlsx"
 OUTPUT_FILE = "Bestbuy_Import.csv"
 ALL_SHIPMENTS_XLSX = "All_Bestbuy_Imports.xlsx"
 ALL_SHIPMENTS_JSON = "All_Bestbuy_Imports.json"
@@ -18,36 +18,21 @@ def main():
     Main function to process the Canpar shipment summary and generate
     the Best Buy import file.
     """
-    # 1. Check if input file exists
-    if not os.path.exists(INPUT_FILE):
-        print(f"Error: The input file '{INPUT_FILE}' was not found.")
-        return
-
-    # 2. Delete previous Bestbuy_Import.csv if it exists
+    # 1. Delete previous Bestbuy_Import.csv if it exists
     if os.path.exists(OUTPUT_FILE):
         os.remove(OUTPUT_FILE)
         print(f"Removed existing output file: {OUTPUT_FILE}")
 
-    # 3. Load the Canpar_Shipment_Summary.xlsx and validate
-    try:
-        df = pd.read_excel(INPUT_FILE)
-    except Exception as e:
-        print(f"Error reading Excel file '{INPUT_FILE}': {e}")
-        return
-
-    # Validate required columns
-    required_columns = ["Order number", "Tracking Number", "Shipment API Status", "Label API Status"]
-    missing_columns = [col for col in required_columns if col not in df.columns]
-    if missing_columns:
-        print(f"Error: The input file is missing required columns: {', '.join(missing_columns)}")
-        return
-
-    # 4. Filter for successfully processed orders
-    successful_df = df[
-        (df["Shipment API Status"] == "SUCCESS") &
-        (df["Label API Status"] == "SUCCESS") &
-        (df["Tracking Number"] != "N/A")
-    ].copy()
+    # 2. Load successful shipments from the database
+    conn = database.create_connection()
+    query = """
+        SELECT o.order_number, s.tracking_number
+        FROM shipments s
+        JOIN orders o ON s.order_id = o.id
+        WHERE s.status = 'SUCCESS'
+    """
+    successful_df = pd.read_sql_query(query, conn)
+    conn.close()
 
     if successful_df.empty:
         print("No new successful shipments to process.")
@@ -55,7 +40,7 @@ def main():
 
     print(f"Found {len(successful_df)} new successful shipments to process.")
 
-    # 5. Create history files if they don't exist
+    # 3. Create history files if they don't exist
     if not os.path.exists(ALL_SHIPMENTS_XLSX):
         pd.DataFrame().to_excel(ALL_SHIPMENTS_XLSX, index=False)
         print(f"Created history file: {ALL_SHIPMENTS_XLSX}")
@@ -65,17 +50,17 @@ def main():
             json.dump([], f)
         print(f"Created history file: {ALL_SHIPMENTS_JSON}")
 
-    # 6. Map fields for the Best Buy import
+    # 4. Map fields for the Best Buy import
     current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     bestbuy_import_df = pd.DataFrame({
-        "order-id": successful_df["Order number"],
+        "order-id": successful_df["order_number"],
         "carrier-name": CARRIER_NAME,
-        "carrier-url": successful_df["Tracking Number"].apply(lambda x: CARRIER_URL_TEMPLATE.format(x)),
-        "tracking-number": successful_df["Tracking Number"],
+        "carrier-url": successful_df["tracking_number"].apply(lambda x: CARRIER_URL_TEMPLATE.format(x)),
+        "tracking-number": successful_df["tracking_number"],
         "datetime-created": current_datetime
     })
 
-    # 7. Filter out records that already exist in the JSON history
+    # 5. Filter out records that already exist in the JSON history
     try:
         if os.path.getsize(ALL_SHIPMENTS_JSON) > 0:
             with open(ALL_SHIPMENTS_JSON, "r") as f:
@@ -97,7 +82,7 @@ def main():
 
     print(f"Found {len(new_records_df)} shipments to be added to the import file.")
 
-    # 8. Append new records to history files
+    # 6. Append new records to history files
     # Append to XLSX
     try:
         all_shipments_df = pd.read_excel(ALL_SHIPMENTS_XLSX, engine="openpyxl")
@@ -114,7 +99,7 @@ def main():
         json.dump(existing_records, f, indent=4)
     print(f"Appended {len(new_records_df)} records to {ALL_SHIPMENTS_JSON}")
 
-    # 9. Save the new records to Bestbuy_Import.csv
+    # 7. Save the new records to Bestbuy_Import.csv
     new_records_df.to_csv(OUTPUT_FILE, index=False)
     print(f"Successfully created Bestbuy import file: {OUTPUT_FILE}")
 
